@@ -45,3 +45,8 @@ p.date {
     font-size: 12px;
     font-style: italic;
 }
+
+.paginator {
+    margin: 40px 0;
+    font-weight: bold;
+}
