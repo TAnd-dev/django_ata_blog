@@ -77,3 +77,21 @@ input[type=submit] {
     text-transform: uppercase;
 }
 
+.comments {
+    padding: 5px 10px 15px;
+}
+
+.comments:nth-child(even) {
+    background: #efefef;
+}
+
+.comments .info {
+    font-weight: bold;
+    font-size: 12px;
+    color: #666;
+}
+
+.left {
+    float: left;
+    margin-right: 10px;
+}
