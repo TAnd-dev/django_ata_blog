@@ -1,4 +1,6 @@
 from django.contrib.sitemaps import Sitemap
+from django.urls import reverse
+from taggit.models import Tag
 
 from .models import Post
 
@@ -12,3 +14,16 @@ class PostSitemap(Sitemap):
 
     def lastmod(self, obj):
         return obj.updated
+
+
+class TagSitemap(Sitemap):
+    changefreq = 'weekly'
+    priority = 0.7
+    limit = 1000
+
+    def items(self):
+        return Tag.objects.all()
+
+
+    def location(self, obj):
+        return reverse('blog:post_list_by_tag', args=[obj.slug])
