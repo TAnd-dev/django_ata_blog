@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models.functions import Now
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 
 class PublishManager(models.Manager):
@@ -35,6 +36,8 @@ class Post(models.Model):
         choices=Status,
         default=Status.DRAFT
     )
+
+    tags = TaggableManager()
 
     objects = models.Manager()
     published = PublishManager()

@@ -3,29 +3,36 @@ from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
+from taggit.models import Tag
 
 from blog.forms import EmailPostForm, CommentForm
 from blog.models import Post
 
 
-# def post_list(request):
-#     all_posts = Post.published.all()
-#     paginator = Paginator(all_posts, 1)
-#     page_number = request.GET.get('page', 1)
-#     try:
-#         posts = paginator.page(page_number)
-#     except EmptyPage:
-#         posts = paginator.page(paginator.num_pages)
-#     except PageNotAnInteger:
-#         posts = paginator.page(1)
-#     return render(request, 'blog/post/list.html', {'posts': posts})
+def post_list(request, tag_slug=None):
+    all_posts = Post.published.all()
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        all_posts = all_posts.filter(tags__in=[tag])
+    paginator = Paginator(all_posts, 1)
+    page_number = request.GET.get('page', 1)
+
+    try:
+        posts = paginator.page(page_number)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+
+    return render(request, 'blog/post/list.html', {'posts': posts, 'tag': tag})
 
 
-class PostListView(ListView):
-    queryset = Post.published.all()
-    context_object_name = 'posts'
-    paginate_by = 3
-    template_name = 'blog/post/list.html'
+# class PostListView(ListView):
+#     queryset = Post.published.all()
+#     context_object_name = 'posts'
+#     paginate_by = 3
+#     template_name = 'blog/post/list.html'
 
 
 def post_detail(request, year, month, day, post):
@@ -48,7 +55,6 @@ def post_detail(request, year, month, day, post):
             'form': form
         }
     )
-
 
 
 def post_share(request, post_id):
